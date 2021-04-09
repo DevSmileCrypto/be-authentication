@@ -6,12 +6,16 @@ plugins {
 
 group = 'io.cryptobrewmaster.ms'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 repositories {
@@ -21,18 +25,23 @@ repositories {
 
 ext {
     set('springCloudVersion', "2020.0.2")
+
+    prodLibrary = { compile fileTree(dir: 'libs/prod', include: '*.jar') }
+    devLibrary = { compile fileTree(dir: 'libs/dev', include: '*.jar') }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 //    implementation 'org.springframework.cloud:spring-cloud-stream'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'com.github.hapramp:steemconnect4j:v1.3.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
     implementation 'commons-io:commons-io:2.5'
     implementation 'org.apache.commons:commons-lang3:3.9'
@@ -46,6 +55,8 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+dependencies project."${findProperty('env') ?: 'dev'}Library"
 
 dependencyManagement {
     imports {

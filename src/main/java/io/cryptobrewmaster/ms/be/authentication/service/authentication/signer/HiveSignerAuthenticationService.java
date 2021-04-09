@@ -1,7 +1,6 @@
 package io.cryptobrewmaster.ms.be.authentication.service.authentication.signer;
 
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * The interface Hive signer authentication service.
@@ -9,18 +8,18 @@ import org.springframework.web.servlet.view.RedirectView;
 public interface HiveSignerAuthenticationService {
 
     /**
-     * Generate login url redirect view.
+     * Generate login url string.
      *
-     * @return the redirect view
+     * @return the string
      */
-    RedirectView generateLoginUrl();
+    String generateLoginUrl();
 
     /**
-     * Complete registration or login redirect view.
+     * Complete registration or login string.
      *
      * @param params the params
-     * @return the redirect view
+     * @return the string
      */
-    RedirectView completeRegistrationOrLogin(MultiValueMap<String, String> params);
+    String completeRegistrationOrLogin(MultiValueMap<String, String> params);
 
 }

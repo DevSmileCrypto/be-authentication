@@ -1,11 +1,13 @@
 package io.cryptobrewmaster.ms.be.authentication.db.model;
 
-import io.cryptobrewmaster.ms.be.authentication.constant.Role;
-import io.cryptobrewmaster.ms.be.authentication.model.JwtTokenPair;
+import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
+import io.cryptobrewmaster.ms.be.library.constants.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -21,9 +23,14 @@ public class AccountAuthentication {
     public static final String COLLECTION_NAME = "accountAuthentication";
 
     @Id
+    @Field(ID_FIELD)
+    private ObjectId id;
+    private static final String ID_FIELD = "_id";
+
     @Field(ACCOUNT_ID_FIELD)
+    @Indexed(unique = true)
     private String accountId;
-    private static final String ACCOUNT_ID_FIELD = "_id";
+    private static final String ACCOUNT_ID_FIELD = "accountId";
 
     @Field(ACCESS_TOKEN_FIELD)
     private String accessToken;
@@ -67,10 +74,11 @@ public class AccountAuthentication {
         setExpirationRefreshTokenDate(null);
     }
 
-    public static AccountAuthentication of(String accountId, JwtTokenPair jwtTokenPair, List<Role> roles, Clock utcClock) {
+    public static AccountAuthentication of(String accountId, JwtTokenPair jwtTokenPair,
+                                           List<Role> roles, Clock utcClock) {
         long now = utcClock.millis();
         return new AccountAuthentication(
-                accountId, jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
+                null, accountId, jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
                 jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate(), roles,
                 now, now
         );

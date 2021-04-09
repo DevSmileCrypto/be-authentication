@@ -15,6 +15,8 @@ public class AccountDto {
     @NotBlank
     private String accountId;
     @NotBlank
+    private String publicAccountId;
+    @NotBlank
     private String nickname;
     @NotBlank
     private String wallet;
