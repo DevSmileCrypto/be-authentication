@@ -1,6 +1,6 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.account.service;
+package io.cryptobrewmaster.ms.be.authentication.communication.account.service;
 
-import io.cryptobrewmaster.ms.be.authentication.integration.account.dto.AccountDto;
+import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
 
 /**
  * The interface Account communication service.

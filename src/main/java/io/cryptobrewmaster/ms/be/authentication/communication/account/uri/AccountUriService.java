@@ -1,4 +1,4 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.account.uri;
+package io.cryptobrewmaster.ms.be.authentication.communication.account.uri;
 
 import java.net.URI;
 

@@ -2,8 +2,8 @@ package io.cryptobrewmaster.ms.be.authentication.service.authentication.keychain
 
 import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
 import io.cryptobrewmaster.ms.be.authentication.db.repository.AccountAuthenticationRepository;
-import io.cryptobrewmaster.ms.be.authentication.integration.account.dto.AccountDto;
-import io.cryptobrewmaster.ms.be.authentication.integration.account.service.AccountCommunicationService;
+import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
+import io.cryptobrewmaster.ms.be.authentication.communication.account.service.AccountCommunicationService;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import io.cryptobrewmaster.ms.be.authentication.properties.hive.HiveKeychainProperties;
 import io.cryptobrewmaster.ms.be.authentication.service.jwt.JwtService;

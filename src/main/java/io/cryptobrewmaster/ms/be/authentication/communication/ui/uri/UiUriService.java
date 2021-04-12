@@ -1,4 +1,4 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.ui.uri;
+package io.cryptobrewmaster.ms.be.authentication.communication.ui.uri;
 
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 

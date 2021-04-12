@@ -1,6 +1,6 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.ui.uri;
+package io.cryptobrewmaster.ms.be.authentication.communication.ui.uri;
 
-import io.cryptobrewmaster.ms.be.authentication.integration.ui.properties.UiProperties;
+import io.cryptobrewmaster.ms.be.authentication.communication.ui.properties.UiProperties;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

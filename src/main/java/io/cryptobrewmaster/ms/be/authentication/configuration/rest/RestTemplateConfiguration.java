@@ -1,7 +1,7 @@
 package io.cryptobrewmaster.ms.be.authentication.configuration.rest;
 
 import io.cryptobrewmaster.ms.be.authentication.configuration.rest.properties.RestTemplateProperties;
-import io.cryptobrewmaster.ms.be.authentication.integration.account.properties.AccountProperties;
+import io.cryptobrewmaster.ms.be.authentication.communication.account.properties.AccountProperties;
 import io.cryptobrewmaster.ms.be.library.configuration.rest.interceptor.JsonContentTypeRestTemplateInterceptor;
 import io.cryptobrewmaster.ms.be.library.exception.integration.AccountErrorHandler;
 import org.apache.http.client.HttpClient;

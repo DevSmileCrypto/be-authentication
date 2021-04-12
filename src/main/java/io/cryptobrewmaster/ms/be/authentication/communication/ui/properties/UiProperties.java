@@ -1,4 +1,4 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.ui.properties;
+package io.cryptobrewmaster.ms.be.authentication.communication.ui.properties;
 
 import lombok.Getter;
 import lombok.Setter;

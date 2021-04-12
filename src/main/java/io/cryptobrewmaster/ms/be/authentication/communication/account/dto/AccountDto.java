@@ -1,4 +1,4 @@
-package io.cryptobrewmaster.ms.be.authentication.integration.account.dto;
+package io.cryptobrewmaster.ms.be.authentication.communication.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
