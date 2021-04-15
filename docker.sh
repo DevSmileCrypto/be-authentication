@@ -13,6 +13,12 @@ build() {
 }
 
 run() {
+  id=$(docker ps -a | grep $DOCKER_CONTAINER_NAME | awk '{print $1}')
+  if [[ ! -z "$id" ]]; then
+      echo "Container with $DOCKER_CONTAINER_NAME already launched. Please stop and remove it for run again."
+      return 1
+  fi
+
   docker run --name $DOCKER_CONTAINER_NAME \
   -p $DOCKER_CONTAINER_EXTERN_PORT:$DOCKER_CONTAINER_INNER_PORT \
   -e ENVIRONMENT=$SPRING_PROFILE \
