@@ -3,6 +3,36 @@
 
 source .env
 
+echo_validation_info() {
+  echo "Cannot process script because env variable $1 is empty."
+}
+
+if [[ -z "$SPRING_PROFILE" ]]; then
+    echo_validation_info "SPRING_PROFILE"
+    exit 1
+elif [[ -z "$LOCAL_IP" ]]; then
+    echo_validation_info "LOCAL_IP"
+    exit 1
+elif [[ -z "$GRADLE_ENV" ]]; then
+    echo_validation_info "GRADLE_ENV"
+    exit 1
+elif [[ -z "$PROJECT_PATH" ]]; then
+    echo_validation_info "PROJECT_PATH"
+    exit 1
+elif [[ -z "$DOCKER_IMAGE_NAME" ]]; then
+    echo_validation_info "DOCKER_IMAGE_NAME"
+    exit 1
+elif [[ -z "$DOCKER_CONTAINER_NAME" ]]; then
+    echo_validation_info "DOCKER_CONTAINER_NAME"
+    exit 1
+elif [[ -z "$DOCKER_CONTAINER_INNER_PORT" ]]; then
+    echo_validation_info "DOCKER_CONTAINER_INNER_PORT"
+    exit 1
+elif [[ -z "$DOCKER_CONTAINER_EXTERN_PORT" ]]; then
+    echo_validation_info "DOCKER_CONTAINER_EXTERN_PORT"
+    exit 1
+fi
+
 build() {
   docker build -t $DOCKER_IMAGE_NAME \
   --build-arg gradle_env=$GRADLE_ENV \
