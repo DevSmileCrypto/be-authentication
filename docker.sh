@@ -80,6 +80,13 @@ remove() {
   echo "$DOCKER_CONTAINER_NAME container and $DOCKER_IMAGE_NAME image removed"
 }
 
+rebuild() {
+  remove
+  build
+  start
+  echo "$DOCKER_IMAGE_NAME image and $DOCKER_CONTAINER_NAME container rebuilt and restarted"
+}
+
 if [[ "$1" == "build" ]]; then
   build
 elif [[ "$1" == "run" ]]; then
@@ -92,6 +99,8 @@ elif [[ "$1" == "restart" ]]; then
   restart
 elif [[ "$1" == "remove" ]]; then
   remove
+elif [[ "$1" == "rebuild" ]]; then
+  rebuild
 else
   build
   run
