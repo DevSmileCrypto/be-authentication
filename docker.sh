@@ -83,7 +83,7 @@ remove() {
 rebuild() {
   remove
   build
-  start
+  run
   echo "$DOCKER_IMAGE_NAME image and $DOCKER_CONTAINER_NAME container rebuilt and restarted"
 }
 
