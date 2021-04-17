@@ -13,9 +13,9 @@ import javax.validation.constraints.NotBlank;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDto {
     @NotBlank
-    private String accountId;
+    private String uid;
     @NotBlank
-    private String publicAccountId;
+    private String publicUid;
     @NotBlank
     private String nickname;
     @NotBlank

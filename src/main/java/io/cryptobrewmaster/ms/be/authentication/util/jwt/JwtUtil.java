@@ -14,11 +14,11 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtil {
 
-    public static String generate(String accountId, Map<String, Object> claims, Date now,
+    public static String generate(String uid, Map<String, Object> claims, Date now,
                                   Date validity, String tokenSecretKey, String cryptoSecretKey) {
 
         return Jwts.builder()
-                .setSubject(EnDeCrypter.encrypt(accountId, cryptoSecretKey))
+                .setSubject(EnDeCrypter.encrypt(uid, cryptoSecretKey))
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .addClaims(claims)
@@ -43,13 +43,13 @@ public final class JwtUtil {
         }
     }
 
-    public static String getAccountId(String token, String tokenSecretKey, String cryptoSecretKey) {
-        var accountId = Jwts.parser()
+    public static String getUid(String token, String tokenSecretKey, String cryptoSecretKey) {
+        var uid = Jwts.parser()
                 .setSigningKey(tokenSecretKey)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
-        return EnDeCrypter.decrypt(accountId, cryptoSecretKey);
+        return EnDeCrypter.decrypt(uid, cryptoSecretKey);
     }
 
 }

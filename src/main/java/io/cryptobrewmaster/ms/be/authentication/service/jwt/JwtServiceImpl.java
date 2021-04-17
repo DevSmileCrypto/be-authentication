@@ -29,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public JwtTokenPair generatePair(AccountAuthentication accountAuthentication) {
-        return generatePair(accountAuthentication.getAccountId(), accountAuthentication.getRoles());
+        return generatePair(accountAuthentication.getUid(), accountAuthentication.getRoles());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public JwtTokenPair generatePair(String accountId, List<Role> roles) {
+    public JwtTokenPair generatePair(String uid, List<Role> roles) {
         long now = utcClock.millis();
         JwtProperties.Token tokenProperties = jwtProperties.getToken();
 
@@ -52,11 +52,11 @@ public class JwtServiceImpl implements JwtService {
         Map<String, Object> claims = Map.of("roles", roles);
 
         String accessToken = JwtUtil.generate(
-                accountId, claims, nowInDate, new Date(expirationAccessTokenDate),
+                uid, claims, nowInDate, new Date(expirationAccessTokenDate),
                 encodedTokenSecret, encodedCryptoSecret
         );
         String refreshToken = JwtUtil.generate(
-                accountId, claims, nowInDate, new Date(expirationRefreshTokenDate),
+                uid, claims, nowInDate, new Date(expirationRefreshTokenDate),
                 encodedTokenSecret, encodedCryptoSecret
         );
 
@@ -67,9 +67,9 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getAccountIdFromRefreshToken(String refreshToken) {
+    public String getUidFromRefreshToken(String refreshToken) {
         try {
-            return JwtUtil.getAccountId(refreshToken, encodeTokenSecret(), encodeCryptoSecret());
+            return JwtUtil.getUid(refreshToken, encodeTokenSecret(), encodeCryptoSecret());
         } catch (ExpiredJwtException e) {
             throw new InvalidRefreshTokenException(
                     String.format("Expiration exhausted of the refresh token = %s. Error = %s", refreshToken, e.getMessage())
@@ -82,9 +82,9 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getAccountIdFromAccessToken(String accessToken) {
+    public String getUidFromAccessToken(String accessToken) {
         try {
-            return JwtUtil.getAccountId(accessToken, encodeTokenSecret(), encodeCryptoSecret());
+            return JwtUtil.getUid(accessToken, encodeTokenSecret(), encodeCryptoSecret());
         } catch (ExpiredJwtException e) {
             throw new InvalidAccessTokenException(
                     String.format("Expiration exhausted of the access token = %s. Error = %s", accessToken, e.getMessage())

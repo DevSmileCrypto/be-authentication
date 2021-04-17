@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
-//    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation 'org.springframework.kafka:spring-kafka'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'com.github.hapramp:steemconnect4j:v1.3.1'

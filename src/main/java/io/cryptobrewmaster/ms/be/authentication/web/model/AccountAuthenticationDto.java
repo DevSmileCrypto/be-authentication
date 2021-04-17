@@ -20,13 +20,13 @@ public class AccountAuthenticationDto {
     @NotNull
     private boolean valid;
     @NotBlank
-    private String accountId;
+    private String uid;
     @NotNull @NotEmpty
     private List<Role> roles;
 
     public static AccountAuthenticationDto of(boolean valid, AccountAuthentication accountAuthentication) {
         return new AccountAuthenticationDto(
-                valid, accountAuthentication.getAccountId(), accountAuthentication.getRoles()
+                valid, accountAuthentication.getUid(), accountAuthentication.getRoles()
         );
     }
 

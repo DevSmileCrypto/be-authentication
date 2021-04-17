@@ -42,7 +42,7 @@ public interface JwtService {
      * @param refreshToken the refresh token
      * @return the account id from refresh token
      */
-    String getAccountIdFromRefreshToken(String refreshToken);
+    String getUidFromRefreshToken(String refreshToken);
 
     /**
      * Gets account id from access token.
@@ -50,6 +50,6 @@ public interface JwtService {
      * @param accessToken the access token
      * @return the account id from access token
      */
-    String getAccountIdFromAccessToken(String accessToken);
+    String getUidFromAccessToken(String accessToken);
 
 }

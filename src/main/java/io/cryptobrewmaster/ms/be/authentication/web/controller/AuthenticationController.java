@@ -56,11 +56,11 @@ public class AuthenticationController {
         return redirectUrl;
     }
 
-    @PutMapping("/logout/{accountId}")
-    public void logout(@Valid @NotBlank @PathVariable String accountId) {
-        log.info("Request to logout account received. Account id = {}", accountId);
-        authenticationService.logout(accountId);
-        log.info("Response on logout account. Account id = {}", accountId);
+    @PutMapping("/logout/{uid}")
+    public void logout(@Valid @NotBlank @PathVariable String uid) {
+        log.info("Request to logout account received. Uid = {}", uid);
+        authenticationService.logout(uid);
+        log.info("Response on logout account. Uid = {}", uid);
     }
 
 }

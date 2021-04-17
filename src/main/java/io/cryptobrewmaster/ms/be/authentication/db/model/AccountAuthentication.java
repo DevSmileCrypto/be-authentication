@@ -27,10 +27,10 @@ public class AccountAuthentication {
     private ObjectId id;
     private static final String ID_FIELD = "_id";
 
-    @Field(ACCOUNT_ID_FIELD)
+    @Field(UID_FIELD)
     @Indexed(unique = true)
-    private String accountId;
-    private static final String ACCOUNT_ID_FIELD = "accountId";
+    private String uid;
+    private static final String UID_FIELD = "uid";
 
     @Field(ACCESS_TOKEN_FIELD)
     private String accessToken;
@@ -74,11 +74,11 @@ public class AccountAuthentication {
         setExpirationRefreshTokenDate(null);
     }
 
-    public static AccountAuthentication of(String accountId, JwtTokenPair jwtTokenPair,
+    public static AccountAuthentication of(String uid, JwtTokenPair jwtTokenPair,
                                            List<Role> roles, Clock utcClock) {
         long now = utcClock.millis();
         return new AccountAuthentication(
-                null, accountId, jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
+                null, uid, jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
                 jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate(), roles,
                 now, now
         );

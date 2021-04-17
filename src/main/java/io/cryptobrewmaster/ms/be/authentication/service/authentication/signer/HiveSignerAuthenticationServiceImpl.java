@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hapramp.steemconnect4j.SteemConnect;
 import com.hapramp.steemconnect4j.SteemConnectCallback;
 import com.hapramp.steemconnect4j.SteemConnectOptions;
-import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
-import io.cryptobrewmaster.ms.be.authentication.db.repository.AccountAuthenticationRepository;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.service.AccountCommunicationService;
 import io.cryptobrewmaster.ms.be.authentication.communication.ui.uri.UiUriService;
+import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
+import io.cryptobrewmaster.ms.be.authentication.db.repository.AccountAuthenticationRepository;
+import io.cryptobrewmaster.ms.be.authentication.kafka.account.AccountKafkaSender;
 import io.cryptobrewmaster.ms.be.authentication.model.hive.signer.HiveSignerAccountData;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import io.cryptobrewmaster.ms.be.authentication.properties.hive.HiveSignerProperties;
@@ -32,6 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class HiveSignerAuthenticationServiceImpl implements HiveSignerAuthenticationService {
 
     private final AccountCommunicationService accountCommunicationService;
+    private final AccountKafkaSender accountKafkaSender;
 
     private final JwtService jwtService;
     private final UiUriService uiUriService;
@@ -85,14 +87,16 @@ public class HiveSignerAuthenticationServiceImpl implements HiveSignerAuthentica
     public JwtTokenPair registrationOrLogin(HiveSignerAccountData hiveSignerAccountData) {
         AccountDto accountDto = accountCommunicationService.createOrGet(hiveSignerAccountData.getName());
 
-        var accountAuthenticationOptional = accountAuthenticationRepository.findByAccountId(accountDto.getAccountId());
+        var accountAuthenticationOptional = accountAuthenticationRepository.findByUid(accountDto.getUid());
         if (accountAuthenticationOptional.isEmpty()) {
-            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getAccountId(), defaultAuthenticationRoles);
+            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getUid(), defaultAuthenticationRoles);
 
             AccountAuthentication accountAuthentication = AccountAuthentication.of(
-                    accountDto.getAccountId(), jwtTokenPair, defaultAuthenticationRoles, utcClock
+                    accountDto.getUid(), jwtTokenPair, defaultAuthenticationRoles, utcClock
             );
             accountAuthenticationRepository.save(accountAuthentication);
+
+            accountKafkaSender.init(accountDto);
 
             return jwtTokenPair;
         }

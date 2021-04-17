@@ -1,7 +1,15 @@
 package io.cryptobrewmaster.ms.be.authentication.service.authentication;
 
+/**
+ * The interface Authentication service.
+ */
 public interface AuthenticationService {
 
-    void logout(String accountId);
+    /**
+     * Logout.
+     *
+     * @param uid the uid
+     */
+    void logout(String uid);
 
 }

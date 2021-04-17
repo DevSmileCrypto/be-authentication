@@ -8,33 +8,33 @@ import java.util.Optional;
 
 public interface AccountAuthenticationRepository extends MongoRepository<AccountAuthentication, String> {
 
-    Optional<AccountAuthentication> findByAccountId(String accountId);
+    Optional<AccountAuthentication> findByUid(String uid);
 
-    default AccountAuthentication getByAccountId(String accountId) {
-        return findByAccountId(accountId)
+    default AccountAuthentication getByUid(String uid) {
+        return findByUid(uid)
                 .orElseThrow(() -> new ParametersAbsentOrInvalidException(
-                        String.format("Account Authentication with account id = %s not exists in system",
-                                accountId)
+                        String.format("Account Authentication with uid = %s not exists in system",
+                                uid)
                 ));
     }
 
-    Optional<AccountAuthentication> findByAccountIdAndRefreshToken(String accountId, String refreshToken);
+    Optional<AccountAuthentication> findByUidAndRefreshToken(String uid, String refreshToken);
 
-    default AccountAuthentication getByAccountIdAndRefreshToken(String accountId, String refreshToken) {
-        return findByAccountIdAndRefreshToken(accountId, refreshToken)
+    default AccountAuthentication getByUidAndRefreshToken(String uid, String refreshToken) {
+        return findByUidAndRefreshToken(uid, refreshToken)
                 .orElseThrow(() -> new ParametersAbsentOrInvalidException(
-                        String.format("Account Authentication with account id = %s and refresh token = %s not exists in system",
-                                accountId, refreshToken)
+                        String.format("Account Authentication with uid = %s and refresh token = %s not exists in system",
+                                uid, refreshToken)
                 ));
     }
 
-    Optional<AccountAuthentication> findByAccountIdAndAccessToken(String accountId, String accessToken);
+    Optional<AccountAuthentication> findByUidAndAccessToken(String uid, String accessToken);
 
-    default AccountAuthentication getByAccountIdAndAccessToken(String accountId, String accessToken) {
-        return findByAccountIdAndAccessToken(accountId, accessToken)
+    default AccountAuthentication getByUidAndAccessToken(String uid, String accessToken) {
+        return findByUidAndAccessToken(uid, accessToken)
                 .orElseThrow(() -> new ParametersAbsentOrInvalidException(
-                        String.format("Account Authentication with account id = %s and access token = %s not exists in system",
-                                accountId, accessToken)
+                        String.format("Account Authentication with uid = %s and access token = %s not exists in system",
+                                uid, accessToken)
                 ));
     }
 

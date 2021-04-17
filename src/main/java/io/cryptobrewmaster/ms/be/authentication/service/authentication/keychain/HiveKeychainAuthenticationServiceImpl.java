@@ -1,9 +1,10 @@
 package io.cryptobrewmaster.ms.be.authentication.service.authentication.keychain;
 
-import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
-import io.cryptobrewmaster.ms.be.authentication.db.repository.AccountAuthenticationRepository;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.service.AccountCommunicationService;
+import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
+import io.cryptobrewmaster.ms.be.authentication.db.repository.AccountAuthenticationRepository;
+import io.cryptobrewmaster.ms.be.authentication.kafka.account.AccountKafkaSender;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import io.cryptobrewmaster.ms.be.authentication.properties.hive.HiveKeychainProperties;
 import io.cryptobrewmaster.ms.be.authentication.service.jwt.JwtService;
@@ -29,6 +30,7 @@ import java.util.List;
 public class HiveKeychainAuthenticationServiceImpl implements HiveKeychainAuthenticationService {
 
     private final AccountCommunicationService accountCommunicationService;
+    private final AccountKafkaSender accountKafkaSender;
 
     private final JwtService jwtService;
 
@@ -54,14 +56,16 @@ public class HiveKeychainAuthenticationServiceImpl implements HiveKeychainAuthen
         }
         AccountDto accountDto = accountCommunicationService.createOrGet(registrationOrLoginDto.getWallet());
 
-        var accountAuthenticationOptional = accountAuthenticationRepository.findByAccountId(accountDto.getAccountId());
+        var accountAuthenticationOptional = accountAuthenticationRepository.findByUid(accountDto.getUid());
         if (accountAuthenticationOptional.isEmpty()) {
-            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getAccountId(), defaultAuthenticationRoles);
+            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getUid(), defaultAuthenticationRoles);
 
             AccountAuthentication accountAuthentication = AccountAuthentication.of(
-                    accountDto.getAccountId(), jwtTokenPair, defaultAuthenticationRoles, utcClock
+                    accountDto.getUid(), jwtTokenPair, defaultAuthenticationRoles, utcClock
             );
             accountAuthenticationRepository.save(accountAuthentication);
+
+            accountKafkaSender.init(accountDto);
 
             return AuthenticationTokenPairDto.of(jwtTokenPair);
         }
