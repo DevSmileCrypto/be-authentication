@@ -27,8 +27,8 @@ public class TokenServiceImpl implements TokenService {
         if (!valid) {
             return AccountAuthenticationDto.of(false);
         }
-        String accountId = jwtService.getUidFromAccessToken(accessToken);
-        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByUidAndAccessToken(
+        String accountId = jwtService.getAccountIdFromAccessToken(accessToken);
+        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByAccountIdAndAccessToken(
                 accountId, accessToken
         );
         return AccountAuthenticationDto.of(true, accountAuthentication);
@@ -36,8 +36,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public AuthenticationTokenPairDto refresh(String refreshToken) {
-        String accountId = jwtService.getUidFromRefreshToken(refreshToken);
-        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByUidAndRefreshToken(
+        String accountId = jwtService.getAccountIdFromRefreshToken(refreshToken);
+        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByAccountIdAndRefreshToken(
                 accountId, refreshToken
         );
 

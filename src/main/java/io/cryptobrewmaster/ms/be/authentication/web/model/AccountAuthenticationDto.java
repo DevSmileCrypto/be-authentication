@@ -26,7 +26,7 @@ public class AccountAuthenticationDto {
 
     public static AccountAuthenticationDto of(boolean valid, AccountAuthentication accountAuthentication) {
         return new AccountAuthenticationDto(
-                valid, accountAuthentication.getUid(), accountAuthentication.getRoles()
+                valid, accountAuthentication.getAccountId(), accountAuthentication.getRoles()
         );
     }
 

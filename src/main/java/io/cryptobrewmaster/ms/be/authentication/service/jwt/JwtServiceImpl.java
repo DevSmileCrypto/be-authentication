@@ -29,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public JwtTokenPair generatePair(AccountAuthentication accountAuthentication) {
-        return generatePair(accountAuthentication.getUid(), accountAuthentication.getRoles());
+        return generatePair(accountAuthentication.getAccountId(), accountAuthentication.getRoles());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public JwtTokenPair generatePair(String uid, List<Role> roles) {
+    public JwtTokenPair generatePair(String accountId, List<Role> roles) {
         long now = utcClock.millis();
         JwtProperties.Token tokenProperties = jwtProperties.getToken();
 
@@ -52,11 +52,11 @@ public class JwtServiceImpl implements JwtService {
         Map<String, Object> claims = Map.of("roles", roles);
 
         String accessToken = JwtUtil.generate(
-                uid, claims, nowInDate, new Date(expirationAccessTokenDate),
+                accountId, claims, nowInDate, new Date(expirationAccessTokenDate),
                 encodedTokenSecret, encodedCryptoSecret
         );
         String refreshToken = JwtUtil.generate(
-                uid, claims, nowInDate, new Date(expirationRefreshTokenDate),
+                accountId, claims, nowInDate, new Date(expirationRefreshTokenDate),
                 encodedTokenSecret, encodedCryptoSecret
         );
 
@@ -67,7 +67,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getUidFromRefreshToken(String refreshToken) {
+    public String getAccountIdFromRefreshToken(String refreshToken) {
         try {
             return JwtUtil.getUid(refreshToken, encodeTokenSecret(), encodeCryptoSecret());
         } catch (ExpiredJwtException e) {
@@ -82,7 +82,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String getUidFromAccessToken(String accessToken) {
+    public String getAccountIdFromAccessToken(String accessToken) {
         try {
             return JwtUtil.getUid(accessToken, encodeTokenSecret(), encodeCryptoSecret());
         } catch (ExpiredJwtException e) {

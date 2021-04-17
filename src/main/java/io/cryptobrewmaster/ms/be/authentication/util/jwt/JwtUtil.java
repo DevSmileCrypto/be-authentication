@@ -14,11 +14,11 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtil {
 
-    public static String generate(String uid, Map<String, Object> claims, Date now,
+    public static String generate(String accountId, Map<String, Object> claims, Date now,
                                   Date validity, String tokenSecretKey, String cryptoSecretKey) {
 
         return Jwts.builder()
-                .setSubject(EnDeCrypter.encrypt(uid, cryptoSecretKey))
+                .setSubject(EnDeCrypter.encrypt(accountId, cryptoSecretKey))
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .addClaims(claims)

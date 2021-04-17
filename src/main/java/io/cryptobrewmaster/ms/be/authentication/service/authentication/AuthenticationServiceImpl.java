@@ -16,8 +16,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final Clock utcClock;
 
     @Override
-    public void logout(String uid) {
-        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByUid(uid);
+    public void logout(String accountId) {
+        AccountAuthentication accountAuthentication = accountAuthenticationRepository.getByAccountId(accountId);
         accountAuthentication.clearTokenPair();
         accountAuthentication.setLastModifiedDate(utcClock.millis());
         accountAuthenticationRepository.save(accountAuthentication);

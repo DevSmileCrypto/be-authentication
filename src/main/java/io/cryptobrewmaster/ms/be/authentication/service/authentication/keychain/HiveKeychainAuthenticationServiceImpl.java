@@ -56,12 +56,12 @@ public class HiveKeychainAuthenticationServiceImpl implements HiveKeychainAuthen
         }
         AccountDto accountDto = accountCommunicationService.createOrGet(registrationOrLoginDto.getWallet());
 
-        var accountAuthenticationOptional = accountAuthenticationRepository.findByUid(accountDto.getUid());
+        var accountAuthenticationOptional = accountAuthenticationRepository.findByAccountId(accountDto.getId());
         if (accountAuthenticationOptional.isEmpty()) {
-            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getUid(), defaultAuthenticationRoles);
+            JwtTokenPair jwtTokenPair = jwtService.generatePair(accountDto.getId(), defaultAuthenticationRoles);
 
             AccountAuthentication accountAuthentication = AccountAuthentication.of(
-                    accountDto.getUid(), jwtTokenPair, defaultAuthenticationRoles, utcClock
+                    accountDto.getId(), jwtTokenPair, defaultAuthenticationRoles, utcClock
             );
             accountAuthenticationRepository.save(accountAuthentication);
 
