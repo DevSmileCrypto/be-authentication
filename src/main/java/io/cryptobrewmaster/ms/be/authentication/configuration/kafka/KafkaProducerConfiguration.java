@@ -1,10 +1,10 @@
 package io.cryptobrewmaster.ms.be.authentication.configuration.kafka;
 
 import io.cryptobrewmaster.ms.be.authentication.configuration.kafka.properties.KafkaProperties;
-import io.cryptobrewmaster.ms.be.library.kafka.dto.account.AccountKDto;
+import io.cryptobrewmaster.ms.be.library.kafka.dto.account.KafkaAccount;
 import io.cryptobrewmaster.ms.be.library.kafka.interceptor.KafkaProducerInterceptor;
-import io.cryptobrewmaster.ms.be.library.kafka.interceptor.account.AccountKDtoKafkaProducerInterceptor;
-import io.cryptobrewmaster.ms.be.library.kafka.serde.account.AccountKDtoSerde;
+import io.cryptobrewmaster.ms.be.library.kafka.interceptor.account.KafkaAccountProducerInterceptor;
+import io.cryptobrewmaster.ms.be.library.kafka.serde.account.KafkaAccountSerde;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.Serializer;
@@ -45,8 +45,8 @@ public class KafkaProducerConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, AccountKDto> accountKafkaTemplate() {
-        return getKafkaTemplate(AccountKDtoSerde.class, AccountKDtoKafkaProducerInterceptor.class);
+    public KafkaTemplate<String, KafkaAccount> accountKafkaTemplate() {
+        return getKafkaTemplate(KafkaAccountSerde.class, KafkaAccountProducerInterceptor.class);
     }
 
 }
