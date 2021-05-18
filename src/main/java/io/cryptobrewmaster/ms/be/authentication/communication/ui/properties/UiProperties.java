@@ -18,7 +18,8 @@ public class UiProperties {
     @Getter
     @Setter
     public static class Path {
-        private String dashboard;
+        private String apiDashboard;
+        private String adminDashboard;
     }
 
     @Getter

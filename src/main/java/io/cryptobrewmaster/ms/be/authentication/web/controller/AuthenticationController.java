@@ -5,6 +5,7 @@ import io.cryptobrewmaster.ms.be.authentication.service.authentication.keychain.
 import io.cryptobrewmaster.ms.be.authentication.service.authentication.signer.HiveSignerAuthenticationService;
 import io.cryptobrewmaster.ms.be.authentication.web.model.AuthenticationTokenPairDto;
 import io.cryptobrewmaster.ms.be.authentication.web.model.RegistrationOrLoginDto;
+import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
@@ -33,34 +34,37 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login/keychain")
-    public AuthenticationTokenPairDto registrationOrLoginByKeychain(@Valid @NotNull @RequestBody RegistrationOrLoginDto registrationOrLoginDto) {
+    public AuthenticationTokenPairDto registrationOrLoginByKeychain(@Valid @NotNull @RequestBody RegistrationOrLoginDto registrationOrLoginDto,
+                                                                    @Valid @NotNull @RequestParam GatewayType type) {
         log.info("Request to registration or login account by keychain received. {}", registrationOrLoginDto);
-        AuthenticationTokenPairDto authenticationTokenPairDto = hiveKeychainAuthenticationService.registrationOrLogin(registrationOrLoginDto);
+        var authenticationTokenPairDto = hiveKeychainAuthenticationService.registrationOrLogin(registrationOrLoginDto, type);
         log.info("Response on registration or login account by keychain. {}", authenticationTokenPairDto);
         return authenticationTokenPairDto;
     }
 
     @GetMapping("/login/signer")
-    public String generateRegistrationOrLoginUrlBySigner() {
-        log.info("Request to generate oauth registration or login url account by signer received.");
-        String redirectUrl = hiveSignerAuthenticationService.generateLoginUrl();
+    public String generateRegistrationOrLoginUrlBySigner(@Valid @NotNull @RequestParam GatewayType type) {
+        log.info("Request to generate oauth registration or login url account by signer received. Type = {}", type);
+        String redirectUrl = hiveSignerAuthenticationService.generateLoginUrl(type);
         log.info("Response on generate oauth registration or login url account by signer. Redirect url = {}", redirectUrl);
         return redirectUrl;
     }
 
     @GetMapping("/login/signer/redirect")
-    public String completeRegistrationOrLoginBySigner(@Valid @NotNull @RequestParam MultiValueMap<String, String> params) {
-        log.info("Request to complete redirect oauth registration or login account by signer received.");
-        String redirectUrl = hiveSignerAuthenticationService.completeRegistrationOrLogin(params);
+    public String completeRegistrationOrLoginBySigner(@Valid @NotNull @RequestParam MultiValueMap<String, String> params,
+                                                      @Valid @NotNull @RequestParam GatewayType type) {
+        log.info("Request to complete redirect oauth registration or login account by signer received. Type = {}", type);
+        String redirectUrl = hiveSignerAuthenticationService.completeRegistrationOrLogin(params, type);
         log.info("Response on complete redirect oauth registration or login account by signer. Redirect url = {}", redirectUrl);
         return redirectUrl;
     }
 
-    @PutMapping("/logout/{uid}")
-    public void logout(@Valid @NotBlank @PathVariable String uid) {
-        log.info("Request to logout account received. Uid = {}", uid);
-        authenticationService.logout(uid);
-        log.info("Response on logout account. Uid = {}", uid);
+    @PutMapping("/logout/{accountId}")
+    public void logout(@Valid @NotBlank @PathVariable String accountId,
+                       @Valid @NotNull @RequestParam GatewayType type) {
+        log.info("Request to logout account received. Account id = {}", accountId);
+        authenticationService.logout(accountId, type);
+        log.info("Response on logout account. Uid = {}", accountId);
     }
 
 }

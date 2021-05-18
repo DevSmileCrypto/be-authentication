@@ -43,4 +43,21 @@ public class AccountCommunicationServiceImpl extends BaseCommunicationService im
         );
     }
 
+    @Override
+    public AccountDto initialize(String accountId) {
+        return performRequestWithResponse(
+                accountUriService.getInitializeUri(accountId),
+                HttpMethod.PUT,
+                AccountDto.class,
+                new RequestLog(
+                        "Request to initialize account by account id send to %s ms. Account id = %s",
+                        List.of(getMicroServiceName(), accountId),
+                        "Response on initialize account by account id from %s ms.",
+                        List.of(getMicroServiceName()),
+                        "No response from %s ms on initialize account by account id request. Account id = %s.",
+                        List.of(getMicroServiceName(), accountId)
+                )
+        );
+    }
+
 }

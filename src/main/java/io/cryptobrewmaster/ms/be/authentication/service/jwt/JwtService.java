@@ -4,7 +4,7 @@ import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import io.cryptobrewmaster.ms.be.library.constants.Role;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * The interface Jwt service.
@@ -18,7 +18,7 @@ public interface JwtService {
      * @param roles     the roles
      * @return the jwt token pair
      */
-    JwtTokenPair generatePair(String accountId, List<Role> roles);
+    JwtTokenPair generatePair(String accountId, Set<Role> roles);
 
     /**
      * Generate pair jwt token pair.

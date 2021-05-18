@@ -22,4 +22,13 @@ public class AccountUriServiceImpl implements AccountUriService {
                 .toUri();
     }
 
+    @Override
+    public URI getInitializeUri(String accountId) {
+        return UriComponentsBuilder.fromUriString(accountProperties.getUri())
+                .path(accountProperties.getPath().getAccount().getInitialize())
+                .buildAndExpand(accountId)
+                .encode()
+                .toUri();
+    }
+
 }

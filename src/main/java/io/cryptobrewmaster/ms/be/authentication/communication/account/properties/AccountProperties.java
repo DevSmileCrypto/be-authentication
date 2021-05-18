@@ -24,6 +24,7 @@ public class AccountProperties {
         @Setter
         public static class Account {
             private String createOrGet;
+            private String initialize;
         }
     }
 

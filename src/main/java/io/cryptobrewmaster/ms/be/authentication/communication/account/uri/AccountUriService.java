@@ -15,4 +15,12 @@ public interface AccountUriService {
      */
     URI getCreateOrGetUri(String wallet);
 
+    /**
+     * Gets initialize uri.
+     *
+     * @param accountId the account id
+     * @return the initialize uri
+     */
+    URI getInitializeUri(String accountId);
+
 }

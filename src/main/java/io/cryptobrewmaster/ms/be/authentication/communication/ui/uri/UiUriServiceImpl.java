@@ -16,13 +16,16 @@ import java.util.function.Consumer;
 @Service
 public class UiUriServiceImpl implements UiUriService {
 
+    private static final String SUCCESS_PARAM = "success";
+    private static final String ERROR_PARAM = "error";
+
     private final UiProperties uiProperties;
 
     @Override
     public URI getDashboardUriWithNotSuccess() {
         return UriComponentsBuilder.fromUriString(uiProperties.getUri())
-                .path(uiProperties.getPath().getDashboard())
-                .queryParam("success", false)
+                .path(uiProperties.getPath().getApiDashboard())
+                .queryParam(SUCCESS_PARAM, false)
                 .build()
                 .encode()
                 .toUri();
@@ -31,9 +34,50 @@ public class UiUriServiceImpl implements UiUriService {
     @Override
     public URI getDashboardUriWithSuccess(JwtTokenPair jwtTokenPair) {
         return UriComponentsBuilder.fromUriString(uiProperties.getUri())
-                .path(uiProperties.getPath().getDashboard())
+                .path(uiProperties.getPath().getApiDashboard())
                 .queryParams(getJwtQueryParamsMap(jwtTokenPair))
-                .queryParam("success", true)
+                .queryParam(SUCCESS_PARAM, true)
+                .build()
+                .encode()
+                .toUri();
+    }
+
+    @Override
+    public URI getDashboardUriWithError() {
+        return UriComponentsBuilder.fromUriString(uiProperties.getUri())
+                .path(uiProperties.getPath().getApiDashboard())
+                .queryParam(ERROR_PARAM, true)
+                .build()
+                .encode()
+                .toUri();
+    }
+
+    @Override
+    public URI getAdminDashboardUriWithNotSuccess() {
+        return UriComponentsBuilder.fromUriString(uiProperties.getUri())
+                .path(uiProperties.getPath().getAdminDashboard())
+                .queryParam(SUCCESS_PARAM, false)
+                .build()
+                .encode()
+                .toUri();
+    }
+
+    @Override
+    public URI getAdminDashboardUriWithSuccess(JwtTokenPair jwtTokenPair) {
+        return UriComponentsBuilder.fromUriString(uiProperties.getUri())
+                .path(uiProperties.getPath().getAdminDashboard())
+                .queryParams(getJwtQueryParamsMap(jwtTokenPair))
+                .queryParam(SUCCESS_PARAM, true)
+                .build()
+                .encode()
+                .toUri();
+    }
+
+    @Override
+    public URI getAdminDashboardUriWithError() {
+        return UriComponentsBuilder.fromUriString(uiProperties.getUri())
+                .path(uiProperties.getPath().getAdminDashboard())
+                .queryParam(ERROR_PARAM, true)
                 .build()
                 .encode()
                 .toUri();
@@ -50,16 +94,6 @@ public class UiUriServiceImpl implements UiUriService {
 
     private <T> Consumer<Object> addQueryParam(T queryParamName, MultiValueMap<T, String> queryParams) {
         return o -> queryParams.add(queryParamName, String.valueOf(o));
-    }
-
-    @Override
-    public URI getDashboardUriWithError() {
-        return UriComponentsBuilder.fromUriString(uiProperties.getUri())
-                .path(uiProperties.getPath().getDashboard())
-                .queryParam("error", true)
-                .build()
-                .encode()
-                .toUri();
     }
 
 }

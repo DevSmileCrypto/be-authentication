@@ -15,4 +15,12 @@ public interface AccountCommunicationService {
      */
     AccountDto createOrGet(String wallet);
 
+    /**
+     * Initialize account dto.
+     *
+     * @param accountId the account id
+     * @return the account dto
+     */
+    AccountDto initialize(String accountId);
+
 }

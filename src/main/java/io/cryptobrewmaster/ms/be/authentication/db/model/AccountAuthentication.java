@@ -1,6 +1,7 @@
 package io.cryptobrewmaster.ms.be.authentication.db.model;
 
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
+import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import io.cryptobrewmaster.ms.be.library.constants.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Clock;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -32,24 +34,12 @@ public class AccountAuthentication {
     private String accountId;
     private static final String ACCOUNT_ID_FIELD = "accountId";
 
-    @Field(ACCESS_TOKEN_FIELD)
-    private String accessToken;
-    private static final String ACCESS_TOKEN_FIELD = "accessToken";
-
-    @Field(EXPIRATION_ACCESS_TOKEN_DATE_FIELD)
-    private Long expirationAccessTokenDate;
-    private static final String EXPIRATION_ACCESS_TOKEN_DATE_FIELD = "expirationAccessTokenDate";
-
-    @Field(REFRESH_TOKEN_FIELD)
-    private String refreshToken;
-    private static final String REFRESH_TOKEN_FIELD = "refreshToken";
-
-    @Field(EXPIRATION_REFRESH_TOKEN_DATE_FIELD)
-    private Long expirationRefreshTokenDate;
-    private static final String EXPIRATION_REFRESH_TOKEN_DATE_FIELD = "expirationRefreshTokenDate";
+    @Field(TOKEN_INFO_FIELD)
+    private Map<GatewayType, TokenInfo> tokenInfo;
+    private static final String TOKEN_INFO_FIELD = "tokenInfo";
 
     @Field(ROLES_FIELD)
-    private List<Role> roles;
+    private Set<Role> roles;
     private static final String ROLES_FIELD = "roles";
 
     @Field(CREATED_DATE_FIELD)
@@ -60,28 +50,40 @@ public class AccountAuthentication {
     private Long lastModifiedDate;
     private static final String LAST_MODIFIED_DATE_FIELD = "lastModifiedDate";
 
-    public void updateTokenPair(JwtTokenPair jwtTokenPair) {
-        setAccessToken(jwtTokenPair.getAccessToken());
-        setExpirationAccessTokenDate(jwtTokenPair.getExpirationAccessTokenDate());
-        setRefreshToken(jwtTokenPair.getRefreshToken());
-        setExpirationRefreshTokenDate(jwtTokenPair.getExpirationRefreshTokenDate());
+    public TokenInfo getTokenInfo(GatewayType type) {
+        return getTokenInfo().get(type);
     }
 
-    public void clearTokenPair() {
-        setAccessToken(null);
-        setExpirationAccessTokenDate(null);
-        setRefreshToken(null);
-        setExpirationRefreshTokenDate(null);
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TokenInfo {
+        private String accessToken;
+        private Long expirationAccessTokenDate;
+        private String refreshToken;
+        private Long expirationRefreshTokenDate;
     }
 
-    public static AccountAuthentication of(String accountId, JwtTokenPair jwtTokenPair,
-                                           List<Role> roles, Clock utcClock) {
+    public void updateTokenInfo(JwtTokenPair jwtTokenPair, GatewayType type) {
+        getTokenInfo().put(type, new TokenInfo(
+                jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
+                jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate()
+        ));
+    }
+
+    public void clearTokenInfo(GatewayType type) {
+        getTokenInfo().remove(type);
+    }
+
+    public static AccountAuthentication of(String accountId, GatewayType type, JwtTokenPair jwtTokenPair,
+                                           Set<Role> roles, Clock utcClock) {
+        var tokenInfoMap = Map.of(type, new TokenInfo(
+                jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
+                jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate()
+        ));
+
         long now = utcClock.millis();
-        return new AccountAuthentication(
-                null, accountId, jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
-                jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate(), roles,
-                now, now
-        );
+        return new AccountAuthentication(null, accountId, tokenInfoMap, roles, now, now);
     }
 
 }

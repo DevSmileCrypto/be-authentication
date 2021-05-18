@@ -31,4 +31,26 @@ public interface UiUriService {
      */
     URI getDashboardUriWithError();
 
+    /**
+     * Gets admin dashboard uri with not success.
+     *
+     * @return the admin dashboard uri with not success
+     */
+    URI getAdminDashboardUriWithNotSuccess();
+
+    /**
+     * Gets admin dashboard uri with success.
+     *
+     * @param jwtTokenPair the jwt token pair
+     * @return the admin dashboard uri with success
+     */
+    URI getAdminDashboardUriWithSuccess(JwtTokenPair jwtTokenPair);
+
+    /**
+     * Gets admin dashboard uri with error.
+     *
+     * @return the admin dashboard uri with error
+     */
+    URI getAdminDashboardUriWithError();
+
 }

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -38,14 +38,14 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public JwtTokenPair generatePair(String accountId, List<Role> roles) {
+    public JwtTokenPair generatePair(String accountId, Set<Role> roles) {
         long now = utcClock.millis();
-        JwtProperties.Token tokenProperties = jwtProperties.getToken();
+        var tokenProperties = jwtProperties.getToken();
 
         long expirationAccessTokenDate = now + tokenProperties.getAccess().getLongExpireLength();
         long expirationRefreshTokenDate = now + tokenProperties.getRefresh().getLongExpireLength();
 
-        Date nowInDate = new Date(now);
+        var nowInDate = new Date(now);
         String encodedTokenSecret = encodeTokenSecret();
         String encodedCryptoSecret = encodeCryptoSecret();
 

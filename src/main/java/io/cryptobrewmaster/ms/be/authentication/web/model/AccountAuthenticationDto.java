@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -21,8 +21,9 @@ public class AccountAuthenticationDto {
     private boolean valid;
     @NotBlank
     private String uid;
-    @NotNull @NotEmpty
-    private List<Role> roles;
+    @NotNull
+    @NotEmpty
+    private Set<Role> roles;
 
     public static AccountAuthenticationDto of(boolean valid, AccountAuthentication accountAuthentication) {
         return new AccountAuthenticationDto(
@@ -31,6 +32,6 @@ public class AccountAuthenticationDto {
     }
 
     public static AccountAuthenticationDto of(boolean valid) {
-        return new AccountAuthenticationDto(valid, "", List.of());
+        return new AccountAuthenticationDto(valid, "", Set.of());
     }
 }
