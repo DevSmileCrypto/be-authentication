@@ -1,7 +1,6 @@
 package io.cryptobrewmaster.ms.be.authentication.service.authentication.signer;
 
 import io.cryptobrewmaster.ms.be.authentication.service.authentication.signer.strategy.HiveSignerAuthenticationStrategy;
-import io.cryptobrewmaster.ms.be.authentication.util.OAuthUtil;
 import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import io.cryptobrewmaster.ms.be.library.exception.InnerServiceException;
 import lombok.RequiredArgsConstructor;

@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_LOCAL_IP="192.168.1.114"
+        DOCKER_SPRING_PROFILE="docker"
+        CLOUD_LOCAL_IP="10.172.0.2"
+        CLOUD_SPRING_PROFILE="stage"
+    }
+    stages {
+        stage ('Build image and run') {
+            steps {
+                sh """
+                sed -i.bak 's#SPRING_PROFILE=${env.DOCKER_SPRING_PROFILE}#SPRING_PROFILE=${env.CLOUD_SPRING_PROFILE}#' .env
+                sed -i.bak 's#LOCAL_IP=${env.DOCKER_LOCAL_IP}#LOCAL_IP=${env.CLOUD_LOCAL_IP}#' .env
+
+                bash docker.sh rebuild
+                """
+            }
+        }    
+    }
+}
+

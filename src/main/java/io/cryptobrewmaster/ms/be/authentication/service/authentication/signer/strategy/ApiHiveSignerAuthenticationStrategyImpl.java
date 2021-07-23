@@ -1,8 +1,6 @@
 package io.cryptobrewmaster.ms.be.authentication.service.authentication.signer.strategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hapramp.steemconnect4j.SteemConnect;
-import com.hapramp.steemconnect4j.SteemConnectOptions;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.service.AccountCommunicationService;
 import io.cryptobrewmaster.ms.be.authentication.communication.ui.uri.UiUriService;
@@ -12,10 +10,8 @@ import io.cryptobrewmaster.ms.be.authentication.kafka.account.AccountKafkaSender
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import io.cryptobrewmaster.ms.be.authentication.properties.hive.HiveSignerProperties;
 import io.cryptobrewmaster.ms.be.authentication.service.jwt.JwtService;
-import io.cryptobrewmaster.ms.be.authentication.util.OAuthUtil;
 import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import io.cryptobrewmaster.ms.be.library.constants.Role;
-import io.cryptobrewmaster.ms.be.library.exception.InnerServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

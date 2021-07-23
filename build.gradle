@@ -1,8 +1,19 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
+
+apply plugin: 'com.jfrog.artifactory'
 
 group = 'io.cryptobrewmaster.ms'
 version = '0.0.1-SNAPSHOT'
@@ -25,12 +36,12 @@ repositories {
 
 ext {
     set('springCloudVersion', "2020.0.2")
-
-    prodLibrary = { compile fileTree(dir: 'libs/prod', include: '*.jar') }
-    devLibrary = { compile fileTree(dir: 'libs/dev', include: '*.jar') }
+    set('libVersion', "0.0.1-DEV")
 }
 
 dependencies {
+    implementation "alt-cryptobrewmaster:be-library:${libVersion}"
+
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -56,8 +67,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-dependencies project."${findProperty('env') ?: 'dev'}Library"
-
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -66,4 +75,16 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"
+    resolve {
+        repository {
+            repoKey = 'alt-cryptobrewmaster-gradle-dev-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+        }
+    }
 }

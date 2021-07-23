@@ -43,7 +43,7 @@ build() {
 }
 
 run() {
-  id=$(docker ps -a | grep $DOCKER_CONTAINER_NAME | awk '{print $1}')
+  id=$(docker ps -a | grep -w $DOCKER_CONTAINER_NAME | awk '{print $1}')
   if [[ ! -z "$id" ]]; then
       echo "Container with $DOCKER_CONTAINER_NAME already launched. Please stop and remove it for run again."
       return 1
@@ -80,10 +80,16 @@ remove() {
   echo "$DOCKER_CONTAINER_NAME container and $DOCKER_IMAGE_NAME image removed"
 }
 
+clear() {
+  docker rmi -f $(docker images | grep '<none>' | awk '{print $3}')
+  echo "All build images removed"
+}
+
 rebuild() {
   remove
   build
   run
+  clear
   echo "$DOCKER_IMAGE_NAME image and $DOCKER_CONTAINER_NAME container rebuilt and restarted"
 }
 
@@ -99,6 +105,8 @@ elif [[ "$1" == "restart" ]]; then
   restart
 elif [[ "$1" == "remove" ]]; then
   remove
+elif [[ "$1" == "clear" ]]; then
+  clear
 elif [[ "$1" == "rebuild" ]]; then
   rebuild
 else
