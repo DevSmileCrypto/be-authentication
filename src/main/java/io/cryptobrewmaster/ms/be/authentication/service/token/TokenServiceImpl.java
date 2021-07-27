@@ -23,7 +23,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public AccountAuthenticationDto validate(String accessToken, GatewayType type) {
-        boolean valid = jwtService.validate(accessToken);
+        boolean valid = jwtService.validateAccessToken(accessToken);
         if (!valid) {
             return AccountAuthenticationDto.of(false);
         }

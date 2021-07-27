@@ -34,7 +34,7 @@ public interface JwtService {
      * @param token the token
      * @return the boolean
      */
-    boolean validate(String token);
+    boolean validateAccessToken(String token);
 
     /**
      * Gets account id from refresh token.

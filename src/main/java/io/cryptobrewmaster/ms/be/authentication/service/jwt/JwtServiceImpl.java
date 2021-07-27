@@ -33,8 +33,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public boolean validate(String token) {
-        return JwtUtil.validate(token, encodeTokenSecret(), utcClock);
+    public boolean validateAccessToken(String accessToken) {
+        return JwtUtil.validateAccessToken(accessToken, encodeTokenSecret(), utcClock);
     }
 
     @Override

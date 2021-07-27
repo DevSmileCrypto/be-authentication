@@ -3,6 +3,7 @@ package io.cryptobrewmaster.ms.be.authentication.configuration.rest;
 import io.cryptobrewmaster.ms.be.authentication.communication.account.properties.AccountProperties;
 import io.cryptobrewmaster.ms.be.authentication.configuration.rest.properties.RestTemplateProperties;
 import io.cryptobrewmaster.ms.be.library.configuration.rest.interceptor.JsonContentTypeRestTemplateInterceptor;
+import io.cryptobrewmaster.ms.be.library.configuration.rest.interceptor.MDCRestTemplateInterceptor;
 import io.cryptobrewmaster.ms.be.library.constants.MicroServiceName;
 import io.cryptobrewmaster.ms.be.library.exception.integration.CommunicationErrorHandler;
 import org.apache.http.client.HttpClient;
@@ -55,6 +56,7 @@ public class RestTemplateConfiguration {
         return restTemplateBuilder.errorHandler(new CommunicationErrorHandler(MicroServiceName.BE_ACCOUNT))
                 .rootUri(accountProperties.getUri())
                 .interceptors(new JsonContentTypeRestTemplateInterceptor())
+                .additionalInterceptors(new MDCRestTemplateInterceptor())
                 .setConnectTimeout(Duration.ofMillis(accountProperties.getTimeout().getConnect()))
                 .setReadTimeout(Duration.ofMillis(accountProperties.getTimeout().getRead()))
                 .build();

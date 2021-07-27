@@ -1,6 +1,6 @@
 package io.cryptobrewmaster.ms.be.authentication.util.jwt;
 
-import io.cryptobrewmaster.ms.be.library.exception.InnerServiceException;
+import io.cryptobrewmaster.ms.be.library.exception.authentication.InvalidAccessTokenException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,7 +26,7 @@ public final class JwtUtil {
                 .compact();
     }
 
-    public static boolean validate(String token, String tokenSecretKey, Clock utcClock) {
+    public static boolean validateAccessToken(String token, String tokenSecretKey, Clock utcClock) {
         try {
             Date now = new Date(utcClock.millis());
 
@@ -37,7 +37,7 @@ public final class JwtUtil {
                     .getExpiration()
                     .before(now);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InnerServiceException(
+            throw new InvalidAccessTokenException(
                     String.format("The JWT token has not been validated. Token = %s", token)
             );
         }
