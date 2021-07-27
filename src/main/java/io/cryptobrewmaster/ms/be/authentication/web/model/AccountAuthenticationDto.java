@@ -20,7 +20,7 @@ public class AccountAuthenticationDto {
     @NotNull
     private boolean valid;
     @NotBlank
-    private String uid;
+    private String accountId;
     @NotNull
     @NotEmpty
     private Set<Role> roles;
