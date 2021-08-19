@@ -1,6 +1,7 @@
 package io.cryptobrewmaster.ms.be.authentication.communication.account.service;
 
 import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.AccountDto;
+import reactor.core.publisher.Mono;
 
 /**
  * The interface Account communication service.
@@ -8,19 +9,19 @@ import io.cryptobrewmaster.ms.be.authentication.communication.account.dto.Accoun
 public interface AccountCommunicationService {
 
     /**
-     * Create account dto.
+     * Create or get mono.
      *
      * @param wallet the wallet
-     * @return the account dto
+     * @return the mono
      */
-    AccountDto createOrGet(String wallet);
+    Mono<AccountDto> createOrGet(String wallet);
 
     /**
-     * Initialize account dto.
+     * Initialize mono.
      *
      * @param accountId the account id
-     * @return the account dto
+     * @return the mono
      */
-    AccountDto initialize(String accountId);
+    Mono<AccountDto> initialize(String accountId);
 
 }

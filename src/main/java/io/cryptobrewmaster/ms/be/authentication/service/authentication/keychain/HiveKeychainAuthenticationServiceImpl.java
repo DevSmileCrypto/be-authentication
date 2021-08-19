@@ -7,6 +7,7 @@ import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import io.cryptobrewmaster.ms.be.library.exception.InnerServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class HiveKeychainAuthenticationServiceImpl implements HiveKeychainAuthen
     private final List<HiveKeychainAuthenticationStrategy> hiveKeychainAuthenticationStrategies;
 
     @Override
-    public AuthenticationTokenPairDto registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto, GatewayType type) {
+    public Mono<AuthenticationTokenPairDto> registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto, GatewayType type) {
         return hiveKeychainAuthenticationStrategies.stream()
                 .filter(strategy -> strategy.getType() == type)
                 .findFirst()

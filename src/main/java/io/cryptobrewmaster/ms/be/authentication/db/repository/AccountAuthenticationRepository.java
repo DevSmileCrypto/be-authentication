@@ -3,19 +3,13 @@ package io.cryptobrewmaster.ms.be.authentication.db.repository;
 import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
 import io.cryptobrewmaster.ms.be.library.exception.ParametersAbsentOrInvalidException;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-public interface AccountAuthenticationRepository extends MongoRepository<AccountAuthentication, String> {
+public interface AccountAuthenticationRepository extends ReactiveMongoRepository<AccountAuthentication, String> {
 
-    Optional<AccountAuthentication> findByAccountId(String accountId);
-
-    default AccountAuthentication getByAccountId(String accountId) {
-        return findByAccountId(accountId)
-                .orElseThrow(() -> new ParametersAbsentOrInvalidException(
-                        String.format("Account Authentication with account id = %s not exists in system",
-                                accountId)
-                ));
-    }
+    Mono<AccountAuthentication> findByAccountId(String accountId);
 
 }

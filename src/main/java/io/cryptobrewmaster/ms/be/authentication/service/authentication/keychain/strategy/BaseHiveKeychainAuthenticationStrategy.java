@@ -14,6 +14,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
+import reactor.core.publisher.Mono;
 
 import java.io.ByteArrayOutputStream;
 
@@ -26,12 +27,12 @@ public abstract class BaseHiveKeychainAuthenticationStrategy implements HiveKeyc
 
     protected final HiveKeychainProperties hiveKeychainProperties;
 
-    abstract AuthenticationTokenPairDto login(AccountDto accountDto, AccountAuthentication accountAuthentication);
+    abstract Mono<AuthenticationTokenPairDto> login(AccountDto accountDto, AccountAuthentication accountAuthentication);
 
-    abstract AuthenticationTokenPairDto registration(AccountDto accountDto);
+    abstract Mono<AuthenticationTokenPairDto> registration(AccountDto accountDto);
 
     @Override
-    public AuthenticationTokenPairDto registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto) {
+    public Mono<AuthenticationTokenPairDto> registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto) {
         boolean isValid = verifySignature(registrationOrLoginDto.getSignature(), registrationOrLoginDto.getMessage(), registrationOrLoginDto.getPublicKey());
         if (!isValid) {
             throw new ParametersAbsentOrInvalidException(
@@ -41,11 +42,10 @@ public abstract class BaseHiveKeychainAuthenticationStrategy implements HiveKeyc
                             registrationOrLoginDto.getPublicKey())
             );
         }
-        var accountDto = accountCommunicationService.createOrGet(registrationOrLoginDto.getWallet());
-
-        return accountAuthenticationRepository.findByAccountId(accountDto.getId())
-                .map(accountAuthentication -> login(accountDto, accountAuthentication))
-                .orElseGet(() -> registration(accountDto));
+        return accountCommunicationService.createOrGet(registrationOrLoginDto.getWallet())
+                .flatMap(accountDto -> accountAuthenticationRepository.findByAccountId(accountDto.getId())
+                        .flatMap(accountAuthentication -> login(accountDto, accountAuthentication))
+                        .switchIfEmpty(registration(accountDto)));
     }
 
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -34,37 +35,26 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login/keychain")
-    public AuthenticationTokenPairDto registrationOrLoginByKeychain(@Valid @NotNull @RequestBody RegistrationOrLoginDto registrationOrLoginDto,
-                                                                    @Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to registration or login account by keychain received. {}", registrationOrLoginDto);
-        var authenticationTokenPairDto = hiveKeychainAuthenticationService.registrationOrLogin(registrationOrLoginDto, type);
-        log.info("Response on registration or login account by keychain. {}", authenticationTokenPairDto);
-        return authenticationTokenPairDto;
+    public Mono<AuthenticationTokenPairDto> registrationOrLoginByKeychain(@Valid @NotNull @RequestBody RegistrationOrLoginDto registrationOrLoginDto,
+                                                                          @Valid @NotNull @RequestParam GatewayType type) {
+        return hiveKeychainAuthenticationService.registrationOrLogin(registrationOrLoginDto, type);
     }
 
     @GetMapping("/login/signer")
-    public String generateRegistrationOrLoginUrlBySigner(@Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to generate oauth registration or login url account by signer received. Type = {}", type);
-        String redirectUrl = hiveSignerAuthenticationService.generateLoginUrl(type);
-        log.info("Response on generate oauth registration or login url account by signer. Redirect url = {}", redirectUrl);
-        return redirectUrl;
+    public Mono<String> generateRegistrationOrLoginUrlBySigner(@Valid @NotNull @RequestParam GatewayType type) {
+        return hiveSignerAuthenticationService.generateLoginUrl(type);
     }
 
     @GetMapping("/login/signer/redirect")
-    public String completeRegistrationOrLoginBySigner(@Valid @NotNull @RequestParam MultiValueMap<String, String> params,
-                                                      @Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to complete redirect oauth registration or login account by signer received. Type = {}", type);
-        String redirectUrl = hiveSignerAuthenticationService.completeRegistrationOrLogin(params, type);
-        log.info("Response on complete redirect oauth registration or login account by signer. Redirect url = {}", redirectUrl);
-        return redirectUrl;
+    public Mono<String> completeRegistrationOrLoginBySigner(@Valid @NotNull @RequestParam MultiValueMap<String, String> params,
+                                                            @Valid @NotNull @RequestParam GatewayType type) {
+        return hiveSignerAuthenticationService.completeRegistrationOrLogin(params, type);
     }
 
     @PutMapping("/logout/{accountId}")
     public void logout(@Valid @NotBlank @PathVariable String accountId,
-                       @Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to logout account received. Account id = {}", accountId);
-        authenticationService.logout(accountId, type);
-        log.info("Response on logout account. Uid = {}", accountId);
+                             @Valid @NotNull @RequestParam GatewayType type) {
+         authenticationService.logout(accountId, type);
     }
 
 }

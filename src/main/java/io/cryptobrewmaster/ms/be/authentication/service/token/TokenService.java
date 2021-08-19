@@ -3,6 +3,7 @@ package io.cryptobrewmaster.ms.be.authentication.service.token;
 import io.cryptobrewmaster.ms.be.authentication.web.model.AccountAuthenticationDto;
 import io.cryptobrewmaster.ms.be.authentication.web.model.AuthenticationTokenPairDto;
 import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
+import reactor.core.publisher.Mono;
 
 /**
  * The interface Token service.
@@ -10,21 +11,21 @@ import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 public interface TokenService {
 
     /**
-     * Validate account authentication dto.
+     * Validate mono.
      *
      * @param accessToken the access token
      * @param type        the type
-     * @return the account authentication dto
+     * @return the mono
      */
-    AccountAuthenticationDto validate(String accessToken, GatewayType type);
+    Mono<AccountAuthenticationDto> validate(String accessToken, GatewayType type);
 
     /**
-     * Refresh authentication token pair dto.
+     * Refresh mono.
      *
      * @param refreshToken the refresh token
      * @param type         the type
-     * @return the authentication token pair dto
+     * @return the mono
      */
-    AuthenticationTokenPairDto refresh(String refreshToken, GatewayType type);
+    Mono<AuthenticationTokenPairDto> refresh(String refreshToken, GatewayType type);
 
 }

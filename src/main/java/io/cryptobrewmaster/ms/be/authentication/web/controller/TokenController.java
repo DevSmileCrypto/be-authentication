@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -26,21 +27,15 @@ public class TokenController {
     private final TokenService tokenService;
 
     @GetMapping("/validate/{accessToken}")
-    public AccountAuthenticationDto validate(@Valid @NotBlank @PathVariable String accessToken,
-                                             @Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to validate access token received. Access token = {}, type = {}", accessToken, type);
-        var authTokenPairDto = tokenService.validate(accessToken, type);
-        log.info("Response on validate access token. {}", authTokenPairDto);
-        return authTokenPairDto;
+    public Mono<AccountAuthenticationDto> validate(@Valid @NotBlank @PathVariable String accessToken,
+                                                   @Valid @NotNull @RequestParam GatewayType type) {
+        return tokenService.validate(accessToken, type);
     }
 
     @PutMapping("/refresh/{refreshToken}")
-    public AuthenticationTokenPairDto refresh(@Valid @NotBlank @PathVariable String refreshToken,
-                                              @Valid @NotNull @RequestParam GatewayType type) {
-        log.info("Request to refresh auth token pair received. Refresh token = {}, type = {}", refreshToken, type);
-        var authenticationTokenPairDto = tokenService.refresh(refreshToken, type);
-        log.info("Response on refresh auth token pair. {}", authenticationTokenPairDto);
-        return authenticationTokenPairDto;
+    public Mono<AuthenticationTokenPairDto> refresh(@Valid @NotBlank @PathVariable String refreshToken,
+                                                    @Valid @NotNull @RequestParam GatewayType type) {
+        return tokenService.refresh(refreshToken, type);
     }
 
 }

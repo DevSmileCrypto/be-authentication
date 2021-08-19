@@ -12,6 +12,7 @@ import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import io.cryptobrewmaster.ms.be.library.constants.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.Clock;
 import java.util.Set;
@@ -40,38 +41,35 @@ public class ApiHiveKeychainAuthenticationStrategyImpl extends BaseHiveKeychainA
     }
 
     @Override
-    public AuthenticationTokenPairDto login(AccountDto accountDto, AccountAuthentication accountAuthentication) {
+    public Mono<AuthenticationTokenPairDto> login(AccountDto accountDto, AccountAuthentication accountAuthentication) {
         var jwtTokenPair = jwtService.generatePair(accountAuthentication);
 
         if (!accountDto.isInitialized()) {
             accountKafkaSender.init(accountDto);
-
-            accountCommunicationService.initialize(accountDto.getId());
-
             accountAuthentication.getRoles().addAll(defaultAuthenticationRoles);
         }
 
         accountAuthentication.updateTokenInfo(jwtTokenPair, getType());
         accountAuthentication.setLastModifiedDate(utcClock.millis());
-        accountAuthenticationRepository.save(accountAuthentication);
-
-        return AuthenticationTokenPairDto.of(jwtTokenPair);
+        return accountAuthenticationRepository.save(accountAuthentication)
+                .map(updatedAccountAuthentication -> updatedAccountAuthentication.getTokenInfo(getType()))
+                .map(AuthenticationTokenPairDto::of);
     }
 
     @Override
-    public AuthenticationTokenPairDto registration(AccountDto accountDto) {
+    public Mono<AuthenticationTokenPairDto> registration(AccountDto accountDto) {
         var jwtTokenPair = jwtService.generatePair(accountDto.getId(), defaultAuthenticationRoles);
 
         var accountAuthentication = AccountAuthentication.of(
                 accountDto.getId(), getType(), jwtTokenPair, defaultAuthenticationRoles, utcClock
         );
-        accountAuthenticationRepository.save(accountAuthentication);
+        return accountAuthenticationRepository.save(accountAuthentication)
+                .map(savedAccountAuthentication -> {
+                    accountKafkaSender.init(accountDto);
 
-        accountKafkaSender.init(accountDto);
-
-        accountCommunicationService.initialize(accountDto.getId());
-
-        return AuthenticationTokenPairDto.of(jwtTokenPair);
+                    return savedAccountAuthentication.getTokenInfo(getType());
+                })
+                .map(AuthenticationTokenPairDto::of);
     }
 
     @Override

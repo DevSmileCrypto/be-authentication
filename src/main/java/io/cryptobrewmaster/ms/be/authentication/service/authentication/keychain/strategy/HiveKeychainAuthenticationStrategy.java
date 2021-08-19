@@ -3,6 +3,7 @@ package io.cryptobrewmaster.ms.be.authentication.service.authentication.keychain
 import io.cryptobrewmaster.ms.be.authentication.web.model.AuthenticationTokenPairDto;
 import io.cryptobrewmaster.ms.be.authentication.web.model.RegistrationOrLoginDto;
 import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
+import reactor.core.publisher.Mono;
 
 /**
  * The interface Hive keychain authentication strategy.
@@ -10,12 +11,12 @@ import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 public interface HiveKeychainAuthenticationStrategy {
 
     /**
-     * Registration or login authentication token pair dto.
+     * Registration or login mono.
      *
      * @param registrationOrLoginDto the registration or login dto
-     * @return the authentication token pair dto
+     * @return the mono
      */
-    AuthenticationTokenPairDto registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto);
+    Mono<AuthenticationTokenPairDto> registrationOrLogin(RegistrationOrLoginDto registrationOrLoginDto);
 
     /**
      * Gets type.

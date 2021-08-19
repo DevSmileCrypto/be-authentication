@@ -1,6 +1,7 @@
 package io.cryptobrewmaster.ms.be.authentication.web.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.cryptobrewmaster.ms.be.authentication.db.model.AccountAuthentication;
 import io.cryptobrewmaster.ms.be.authentication.model.jwt.JwtTokenPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,13 @@ public class AuthenticationTokenPairDto {
         return new AuthenticationTokenPairDto(
                 jwtTokenPair.getAccessToken(), jwtTokenPair.getExpirationAccessTokenDate(),
                 jwtTokenPair.getRefreshToken(), jwtTokenPair.getExpirationRefreshTokenDate()
+        );
+    }
+
+    public static AuthenticationTokenPairDto of(AccountAuthentication.TokenInfo tokenInfo) {
+        return new AuthenticationTokenPairDto(
+                tokenInfo.getAccessToken(), tokenInfo.getExpirationAccessTokenDate(),
+                tokenInfo.getRefreshToken(), tokenInfo.getExpirationRefreshTokenDate()
         );
     }
 }

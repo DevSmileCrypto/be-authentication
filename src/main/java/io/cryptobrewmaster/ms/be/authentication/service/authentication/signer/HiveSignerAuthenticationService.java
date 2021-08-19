@@ -2,6 +2,7 @@ package io.cryptobrewmaster.ms.be.authentication.service.authentication.signer;
 
 import io.cryptobrewmaster.ms.be.library.constants.GatewayType;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Mono;
 
 /**
  * The interface Hive signer authentication service.
@@ -9,20 +10,20 @@ import org.springframework.util.MultiValueMap;
 public interface HiveSignerAuthenticationService {
 
     /**
-     * Generate login url string.
+     * Generate login url mono.
      *
      * @param type the type
-     * @return the string
+     * @return the mono
      */
-    String generateLoginUrl(GatewayType type);
+    Mono<String> generateLoginUrl(GatewayType type);
 
     /**
-     * Complete registration or login string.
+     * Complete registration or login mono.
      *
      * @param params the params
      * @param type   the type
-     * @return the string
+     * @return the mono
      */
-    String completeRegistrationOrLogin(MultiValueMap<String, String> params, GatewayType type);
+    Mono<String> completeRegistrationOrLogin(MultiValueMap<String, String> params, GatewayType type);
 
 }
